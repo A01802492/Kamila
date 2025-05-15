@@ -16,8 +16,7 @@ def mostrar_menu_principal():
     print("4. Pagos")
     print("5. Historia Clínica")
     print("6. Reportes")
-    print("7. Ver Pacientes Registrados")
-    print("8. Salir")
+    print("7. Salir")
 
     opcion = input("Seleccione una opción: ")
     return opcion
@@ -26,22 +25,39 @@ def main():
     while True:
         opcion = mostrar_menu_principal()
         if opcion == "1":
-            # Registro de Pacientes
-            nombre = input("Ingrese el nombre del paciente: ")
-            edad = input("Ingrese la edad del paciente: ")
-            direccion = input("Ingrese la dirección del paciente: ")
-            if edad.isdigit():
-                registro_pacientes.registrar_paciente(nombre, int(edad), direccion)
+            opp1 = input("[1]Registrar un paciente\n[2]Ver lista de pacientes\nQué desea realizar?: ")
+            if opp1 == "1":
+                # Registro de Pacientes
+                nombre = input("Ingrese el nombre del paciente: ")
+                edad = input("Ingrese la edad del paciente: ")
+                direccion = input("Ingrese la dirección del paciente: ")
+                if edad.isdigit():
+                    registro_pacientes.registrar_paciente(nombre, int(edad), direccion)
+                else:
+                    print("Edad no válida. Debe ser un número entero positivo.")
             else:
-                print("Edad no válida. Debe ser un número entero positivo.")
+                # Ver Pacientes Registrados
+                registro_pacientes.mostrar_pacientes()
 
         elif opcion == "2":
-            # Registro de Citas
-            paciente = input("Ingrese el nombre del paciente: ")
-            fecha = input("Ingrese la fecha de la cita (AAAA-MM-DD): ")
-            hora = input("Ingrese la hora de la cita (HH:MM): ")
-            motivo = input("Ingrese el motivo de la cita: ")
-            registro_citas.agregar_cita(paciente, fecha, hora, motivo)
+            opp2 = input("[1]Registrar una cita\n[2]Ver lista de citas\nQué desea realizar?: ")
+            if opp2 == "1":
+                # Ver Pacientes Registrados antes de registrar una cita
+                registro_pacientes.mostrar_pacientes()
+
+                # Registro de Citas
+                paciente = input("Ingrese el nombre del paciente (debe estar registrado): ")
+                fecha = input("Ingrese la fecha de la cita (AAAA-MM-DD): ")
+                hora = input("Ingrese la hora de la cita (HH:MM): ")
+                motivo = input("Ingrese el motivo de la cita: ")
+                # Validar si el paciente está registrado
+                paciente_encontrado = any(p["nombre"] == paciente for p in registro_pacientes.pacientes)
+                if not paciente_encontrado:
+                    print("Error: El paciente no está registrado. No se puede agendar la cita.")
+                else:
+                    registro_citas.agregar_cita(paciente, fecha, hora, motivo)
+            else:
+                registro_citas.mostrar_citas()
 
         elif opcion == "3":
             # Tratamientos y Precios
@@ -85,10 +101,6 @@ def main():
                 print("Mes o año no válido.")
 
         elif opcion == "7":
-            # Ver Pacientes Registrados
-            registro_pacientes.mostrar_pacientes()
-
-        elif opcion == "8":
             print("Saliendo del sistema...")
             break
         else:
@@ -96,4 +108,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
